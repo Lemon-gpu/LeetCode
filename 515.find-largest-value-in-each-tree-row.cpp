@@ -1,10 +1,11 @@
 /*
- * @lc app=leetcode.cn id=637 lang=cpp
+ * @lc app=leetcode.cn id=515 lang=cpp
  *
- * [637] Average of Levels in Binary Tree
+ * [515] Find Largest Value in Each Tree Row
  */
 #include "General.h"
-struct TreeNode {
+struct TreeNode
+{
     int val;
     TreeNode *left;
     TreeNode *right;
@@ -28,33 +29,25 @@ struct TreeNode {
 class Solution
 {
 private:
-    double average(vector<int> v)
+    TreeNode *splitter()
     {
-        long long result = 0;
-        for (int i: v)
-        {
-            result += static_cast<long long>(i);
-        }
-        return static_cast<double>(result) / v.size();
-    }
-    TreeNode* splitter()
-    {
-        TreeNode* t = new TreeNode();
+        TreeNode *t = new TreeNode();
         t->left = t;
         t->right = t;
         return t;
     }
 
-    bool detecter(TreeNode* t)
+    bool detecter(TreeNode *t)
     {
         return t->left == t && t->right == t;
     }
+
 public:
-    vector<double> averageOfLevels(TreeNode *root)
+    vector<int> largestValues(TreeNode *root)
     {
         queue<TreeNode *> q;
-        vector<int> layer;
-        vector<double> result;
+        long long curr_max = LLONG_MAX;
+        vector<int> result;
 
         if (root != nullptr)
         {
@@ -68,11 +61,11 @@ public:
             q.pop();
             if (detecter(curr))
             {
-                if (!layer.empty())
+                if (curr_max != LLONG_MAX)
                 {
-                    result.push_back(average(layer));
+                    result.push_back(static_cast<int>(curr_max));
+                    curr_max = LLONG_MAX;
                 }
-                layer.clear();
                 delete curr;
                 if (q.empty())
                 {
@@ -85,7 +78,14 @@ public:
             }
             else
             {
-                layer.push_back(curr->val);
+                if (curr_max == LLONG_MAX)
+                {
+                    curr_max = curr->val;
+                }
+                else
+                {
+                    curr_max = max(curr_max, static_cast<long long>(curr->val));
+                }
                 if (curr->left != nullptr)
                 {
                     q.push(curr->left);
@@ -100,4 +100,3 @@ public:
     }
 };
 // @lc code=end
-
