@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.dvi": "json",
+        "new": "cpp"
+    }
+}
