@@ -1,16 +1,16 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <map>
-
-using namespace std;
-
+/*
+ * @lc app=leetcode.cn id=538 lang=cpp
+ *
+ * [538] Convert BST to Greater Tree
+ */
+#include"General.h"
 struct TreeNode {
     int val;
     TreeNode *left;
     TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
 class BinaryTreePrinter {
@@ -78,17 +78,65 @@ public:
     }
 };
 
-int main() {
-    TreeNode* root = new TreeNode(1);
-    root->left = new TreeNode(2);
-    root->right = new TreeNode(3);
-    root->left->left = new TreeNode(4);
-    root->left->right = new TreeNode(5);
-    root->right->left = new TreeNode(6);
-    root->right->right = new TreeNode(7);
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    int sum = 0;
+public:
+    TreeNode* convertBST(TreeNode* root) {
+        if (root == nullptr) { return root; }
+        convertBST(root->right);
+        root->val += sum;
+        sum = root->val;
+        convertBST(root->left);
+        return root;
+    }
+};
+// @lc code=end
 
-    BinaryTreePrinter printer;
-    printer.print(root);
-
-    return 0;
+TreeNode* insertIntoBST(TreeNode* root, int val) {
+    if (root == nullptr) {
+        return new TreeNode(val);
+    }
+    if (val < root->val) {
+        root->left = insertIntoBST(root->left, val);
+    } else {
+        root->right = insertIntoBST(root->right, val);
+    }
+    return root;
 }
+
+int main(int argc, char const *argv[])
+{
+    TreeNode* root = nullptr;
+    BinaryTreePrinter b;
+
+    root = insertIntoBST(root, 5);
+    root = insertIntoBST(root, 3);
+    root = insertIntoBST(root, 2);
+    root = insertIntoBST(root, 4);
+    root = insertIntoBST(root, 7);
+    root = insertIntoBST(root, 6);
+    root = insertIntoBST(root, 8);
+    b.print(root);
+
+    root = Solution().convertBST(root);
+
+    b.print(root);
+    return 0;
+
+}
+
+
+
